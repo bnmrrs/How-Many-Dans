@@ -1,0 +1,132 @@
+<html>
+  <head>
+	<title>Calculate your Uncle Dan score</title>
+	<style type="text/css" media="screen">
+	body {
+		font-family:Arial, Helvetica, sans-serif;
+		margin:0;
+		padding:0;
+	}
+
+	#container {
+		padding-top: 150px;
+		margin: 0 auto; 
+		width: 1000px; 
+		text-align:center;
+	}
+	
+	h1 {
+		font-size: 50px;
+	}
+		
+	#spinner {
+		display: none;
+	}
+	
+	#numdans-wrapper {
+		display: none;
+		font-size: 24px;
+	}
+	
+	#numdans-wrapper a {
+		color: #666;
+	}
+	
+	#numdans-wrapper p {
+		margin: 0;
+	}
+	
+	#tryagain {
+		font-size: 12px;
+	}
+	
+	#numdans {
+		font-weight: bold;
+		font-size: 36px;
+	}
+	
+	#you {
+		font-weight: bold;
+		font-size: 36px;
+	}
+	
+	#footer {
+	}
+	
+	#footer a {
+		color: #666;
+	}
+	
+	#dan {
+		display: none;
+		position: absolute;
+		right: 0;
+		bottom: 0;
+	}
+	</style>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+	<script src="http://github.com/cowboy/jquery-starwipe/raw/master/jquery.ba-starwipe.min.js"></script>
+	<script src="http://files.www.gethifi.com/posts/konami/konami.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("q.starwipe").starwipe();
+			
+			$(window).konami(function(){
+				$('#dan').slideDown(500, function() {
+					document.getElementById('elRaptorShriek').play();
+					$('#dan').animate({right: $(window).width()+'px'},2500);
+				});
+				
+			});
+			
+			$('#findout').submit(function(e) {
+				$('#question').hide();
+				$('#spinner').show();
+					
+				$.ajax({
+				  type: 'POST',
+				  url: '/howmany',
+				  data: {
+					username: $('#username').val(),
+				  },
+				  success: function(response) {
+					$('#numdans').text(response.dans);
+					$('#you').text($('#username').val());
+					
+					$('#spinner').fadeOut(200, function() {
+						$('#numdans-wrapper').fadeIn(200);
+					});
+				  },
+				  dataType: 'json'
+				});
+				
+				return false;
+			});
+			
+			$('#tryagain').click(function() {
+				$('#numdans-wrapper').fadeOut(200, function() {
+					$('#question').fadeIn(200);
+				});
+				return false;
+			});
+		});
+	</script>
+  </head>
+  <body>
+	<div id="container">
+		<h1>How many Uncle Dans are you?</h1>
+		<form action="/" method="post" id="findout">
+			<p id="question">Enter your <input type="text" id="username" placeholder="twitter username" /> and <input type="submit" value="find out."></p>
+			<img src="/images/spinner.gif" id="spinner" />
+			<div id="numdans-wrapper">
+				<p><span id="you"></span> is <span id="numdans"></span> Uncle Dans!</p>
+				<p><a href="#" id="tryagain">Try again</a></p>
+			</div>
+			<p id="footer">Crafted lovingly by <a href="http://bnmrrs.com" class="starwipe">Benjamin Morris</a><br /> As a gift to <a href="http://twitter.com/dannomatic" class="starwipe">Dannomatic</a><br />Powered by <a href="http://klout.com" class="starwipe">Klout</a></p>
+		</form>
+	</div>
+	<img id="dan" src="http://imgur.com/F3rac.png"/>
+	<audio id="elRaptorShriek" preload="auto"><source src="/audio/raptor-sound.mp3" /><source src="/audio/raptor-sound.ogg" /></audio>
+  </body>
+</html>
