@@ -8,7 +8,7 @@ from django.utils import simplejson as json
 from google.appengine.api import urlfetch
 
 
-KLOUT_API_KEY = 'aua78jp2cp7bm65dmuwpv38d'
+KLOUT_API_KEY = ''
 
 class MainPage(webapp.RequestHandler):
     def get(self):
